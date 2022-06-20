@@ -13,26 +13,26 @@ server.bind(ADDR)
 conexoes = []
 mensagens = []
 
-def enviar_mensagem_individual(conexao):
-    print(f"[ENVIANDO] Enviando mensagens para {conexao['addr']}")
+def send(conexao):
+    print(f"[SERVER] Enviando mensagens para {conexao['addr']}")
     for i in range(conexao['last'], len(mensagens)):
         mensagem_de_envio = "msg=" + mensagens[i]
         conexao['conn'].send(mensagem_de_envio.encode())
         conexao['last'] = i + 1
         time.sleep(0.2)
 
-def enviar_mensagem_todos():
+def sendAll():
     global conexoes
     for conexao in conexoes:
-        enviar_mensagem_individual(conexao)
+        send(conexao)
 
 def handle_clientes(conn, addr):
-    print(f"[NOVA CONEXAO] Um novo usuario se conectou pelo endereço {addr}")
+    print(f"[SERVER] Um novo usuario se conectou pelo endereço {addr}")
     global conexoes
     global mensagens
     nome = False
 
-    while(True):
+    while(1):
         msg = conn.recv(1024).decode(FORMATO)
         if(msg):
             if(msg.startswith("nome=")):
@@ -45,12 +45,12 @@ def handle_clientes(conn, addr):
                     "last": 0
                 }
                 conexoes.append(mapa_da_conexao)
-                enviar_mensagem_individual(mapa_da_conexao)
+                send(mapa_da_conexao)
             elif(msg.startswith("msg=")):
                 mensagem_separada = msg.split("=")
                 mensagem = nome + "=" + mensagem_separada[1]
                 mensagens.append(mensagem)
-                enviar_mensagem_todos()
+                sendAll()
 
 
 
