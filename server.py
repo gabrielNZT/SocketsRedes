@@ -26,13 +26,6 @@ def enviar_mensagem_todos():
     for conexao in conexoes:
         enviar_mensagem_individual(conexao)
 
-"""
-1 vez que o cliente entrar, vai mandar o nome:
-nome=.....
-E as mensagens vem:
-msg=
-"""
-
 def handle_clientes(conn, addr):
     print(f"[NOVA CONEXAO] Um novo usuario se conectou pelo endereço {addr}")
     global conexoes
