@@ -9,6 +9,7 @@ ADDR = (SERVER, PORT)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(ADDR)
+print(f"[CLIENT] tentando conexao com", ADDR)
 
 def handle_mensagens():
     while(True):
