@@ -20,8 +20,9 @@ def enviar(mensagem):
     client.send(mensagem.encode(FORMATO))
 
 def enviar_mensagem():
-    mensagem = input()
-    enviar("msg=" + mensagem)
+    while(1):
+        mensagem = input()
+        enviar("msg=" + mensagem)
 
 def enviar_nome():
     nome = input('Digite seu nome: ')
