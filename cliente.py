@@ -1,3 +1,4 @@
+from concurrent.futures import thread
 import socket
 import threading
 import time
@@ -6,6 +7,8 @@ PORT = 5050
 FORMATO = 'utf-8'
 SERVER = socket.gethostbyname(socket.gethostname())
 ADDR = (SERVER, PORT)
+ 
+deseja_entrar = False
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(ADDR)
@@ -25,11 +28,18 @@ def enviar_mensagem():
         mensagem = input()
         enviar("msg=" + mensagem)
 
-def enviar_nome():
+def enviar_nome():        
     nome = input('Digite seu nome: ')
     enviar("nome=" + nome)
+                
 
 def iniciar_envio():
+    global deseja_entrar
+    while(not deseja_entrar):
+         change = input("digite /ENTRAR parar entrar no chat: ")
+         if(change == "/ENTRAR"):
+             deseja_entrar = True
+    
     enviar_nome()
     enviar_mensagem()
 

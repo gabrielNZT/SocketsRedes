@@ -12,6 +12,7 @@ server.bind(ADDR)
 
 conexoes = []
 mensagens = []
+usuarios = []
 
 def send(conexao):
     print(f"[SERVER] Enviando mensagens para {conexao['addr']}")
@@ -26,17 +27,40 @@ def sendAll():
     for conexao in conexoes:
         send(conexao)
 
+def sendUser(conexao):
+    for i in range (len(usuarios)):
+        mensagem_send = "msg="+"user "+str(i)+"=" + usuarios[i]
+        conexao['conn'].send(mensagem_send.encode())
+        time.sleep(0.2)
+
+def sendUsuarios(addr):
+    global conexoes
+    for conexao in conexoes:
+        if(conexao['addr'] == addr):
+            for i in range (len(usuarios)): 
+                mensagem_send = "msg="+"user "+str(i)+"=" + usuarios[i]
+                conexao['conn'].send(mensagem_send.encode())
+                time.sleep(0.2)
+
+def removeClient(addr):
+    global conexoes
+    for conexao in conexoes:
+        if(conexao['addr'] == addr):
+            conexoes.remove(conexao)
+            print(conexoes)
+
 def handle_clientes(conn, addr):
     print(f"[SERVER] Um novo usuario se conectou pelo endereço {addr}")
     global conexoes
     global mensagens
+    global usuarios
     nome = False
 
     while(1):
         msg = conn.recv(1024).decode(FORMATO)
         if(msg):
             if(msg.startswith("nome=")):
-                mensagem_separada = msg.split("=")
+                mensagem_separada = msg.split("=")            
                 nome = mensagem_separada[1]
                 mapa_da_conexao = {
                     "conn": conn,
@@ -45,12 +69,19 @@ def handle_clientes(conn, addr):
                     "last": 0
                 }
                 conexoes.append(mapa_da_conexao)
+                usuarios.append(mapa_da_conexao["nome"])
                 send(mapa_da_conexao)
             elif(msg.startswith("msg=")):
                 mensagem_separada = msg.split("=")
                 mensagem = nome + "=" + mensagem_separada[1]
-                mensagens.append(mensagem)
-                sendAll()
+                if(mensagem_separada[1] == "/SAIR"):
+                    removeClient(mapa_da_conexao["addr"])
+                elif(mensagem_separada[1] == "/USUARIOS"):
+                    sendUsuarios(mapa_da_conexao["addr"])
+                else:
+                    mensagens.append(mensagem)
+                    sendAll()
+                
 
 
 
