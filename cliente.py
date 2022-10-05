@@ -20,7 +20,7 @@ def handle_mensagens():
         mensagem_splitada = msg.split("=")
         print(mensagem_splitada[1] + ": " + mensagem_splitada[2])
 
-def enviar(mensagem):
+def enviar(mensagem):   
     client.send(mensagem.encode(FORMATO))
 
 def enviar_mensagem():
@@ -48,5 +48,6 @@ def iniciar():
     thread2 = threading.Thread(target=iniciar_envio)
     thread1.start()
     thread2.start()
+    
 
 iniciar()

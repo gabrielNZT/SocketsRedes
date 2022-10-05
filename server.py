@@ -42,13 +42,15 @@ def sendUsuarios(addr):
                 conexao['conn'].send(mensagem_send.encode())
                 time.sleep(0.2)
 
-def removeClient(addr):
+def removeClient(addr, nome):
     global conexoes
+    global usuarios
     for conexao in conexoes:
         if(conexao['addr'] == addr):
             conexoes.remove(conexao)
-            print(conexoes)
-
+    usuarios.remove(nome)
+        
+        
 def handle_clientes(conn, addr):
     print(f"[SERVER] Um novo usuario se conectou pelo endereço {addr}")
     global conexoes
@@ -75,7 +77,7 @@ def handle_clientes(conn, addr):
                 mensagem_separada = msg.split("=")
                 mensagem = nome + "=" + mensagem_separada[1]
                 if(mensagem_separada[1] == "/SAIR"):
-                    removeClient(mapa_da_conexao["addr"])
+                    removeClient(mapa_da_conexao["addr"], mapa_da_conexao["nome"])
                 elif(mensagem_separada[1] == "/USUARIOS"):
                     sendUsuarios(mapa_da_conexao["addr"])
                 else:
