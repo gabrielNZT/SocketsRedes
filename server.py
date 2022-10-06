@@ -60,6 +60,7 @@ def handle_clientes(conn, addr):
 
     while(1):
         msg = conn.recv(1024).decode(FORMATO)
+        print(msg)
         if(msg):
             if(msg.startswith("nome=")):
                 mensagem_separada = msg.split("=")            

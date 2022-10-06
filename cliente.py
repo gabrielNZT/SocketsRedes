@@ -7,12 +7,13 @@ PORT = 5050
 FORMATO = 'utf-8'
 SERVER = socket.gethostbyname(socket.gethostname())
 ADDR = (SERVER, PORT)
- 
+
+Porta = 0
+ip = ""
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 deseja_entrar = False
 
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(ADDR)
-print(f"[CLIENT] tentando conexao com", ADDR)
+print(f"[CLIENT] Colinha para acessar o servidor (ip, porta): ", ADDR)
 
 def handle_mensagens():
     while(True):
@@ -35,19 +36,26 @@ def enviar_nome():
 
 def iniciar_envio():
     global deseja_entrar
+    global ip
+    global Porta
     while(not deseja_entrar):
          change = input("digite /ENTRAR parar entrar no chat: ")
          if(change == "/ENTRAR"):
+             ip_input = input("informe o ip: ")
+             ip = str(ip_input)
+             Porta_input = input("informe a porta: ")
+             Porta = int(Porta_input)
+             addr = (ip, Porta)
+             client.connect(addr)
+             thread1 = threading.Thread(target=handle_mensagens)
+             thread1.start()
              deseja_entrar = True
-    
+
     enviar_nome()
     enviar_mensagem()
 
 def iniciar():
-    thread1 = threading.Thread(target=handle_mensagens)
     thread2 = threading.Thread(target=iniciar_envio)
-    thread1.start()
     thread2.start()
     
-
 iniciar()
